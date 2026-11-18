@@ -1,8 +1,8 @@
 package com.example.Bookhub_EP3.controller;
 
-import com.example.BookhubEp3.DTO.UsuarioRequestDTO;
-import com.example.BookhubEp3.model.Usuario;
-import com.example.BookhubEp3.service.UsuarioService;
+import com.example.Bookhub_EP3.DTO.UsuarioRequestDTO;
+import com.example.Bookhub_EP3.model.Usuario;
+import com.example.Bookhub_EP3.service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
