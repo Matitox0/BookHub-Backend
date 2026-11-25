@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: bookhub-backend
+    runtime: docker
+    plan: free
+    region: oregon
+    branch: main
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: DB_URL
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: JAVA_TOOL_OPTIONS
+        value: -XX:MaxRAMPercentage=75
