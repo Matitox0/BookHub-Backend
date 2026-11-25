@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # BookHub-EP3
 
 ## Conexión con Neon
@@ -29,3 +30,6 @@ Service** con runtime **Docker** y configura en la sección **Environment** las
 variables `PGHOST`, `PGDATABASE`, `PGUSER`, `PGPASSWORD`, `PGSSLMODE` y
 `PGCHANNELBINDING` con los datos de Neon. No hace falta configurar `PORT`:
 Render la proporciona y Spring Boot la usa automáticamente.
+=======
+# BookHub-EP3
+>>>>>>> main
