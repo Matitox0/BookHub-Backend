@@ -1,3 +1,4 @@
+
 package com.example.Bookhub_EP3.config;
 
 import io.swagger.v3.oas.models.Components;
@@ -15,7 +16,11 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI customOpenAPI() {
         return new OpenAPI()
-                .addServersItem(new Server().url("http://localhost:8080"))
+                .addServersItem(
+                    new Server()
+                        .url("https://bookhub-backend-1-kacu.onrender.com")
+                        .description("Servidor de producción")
+                )
                 .info(new Info()
                         .title("API BookHub")
                         .version("1.0")
