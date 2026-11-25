@@ -1,3 +1,4 @@
+
 package com.example.Bookhub_EP3.security;
 
 import lombok.RequiredArgsConstructor;
@@ -27,32 +28,64 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                // 1. Endpoints públicos (Login, Registro y Swagger)
-                .requestMatchers("/api/v1/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
 
-                // 2. Catálogo y tablas auxiliares públicas (Libros, Categorías, Editoriales, Regiones/Comunas/Pagos)
-                .requestMatchers(HttpMethod.GET,
-                        "/api/v1/libros/**",
-                        "/api/v1/categorias/**",
-                        "/api/v1/editoriales/**",
-                        "/api/v1/catalogos/**"
+                // 1. Página principal y documentación pública
+                .requestMatchers(
+                    "/",
+                    "/error",
+                    "/v3/api-docs/**",
+                    "/swagger-ui/**",
+                    "/swagger-ui.html"
                 ).permitAll()
 
-                // 3. Compras del cliente (DEBE ir antes de /api/v1/pedidos/{id})
-                .requestMatchers(HttpMethod.GET, "/api/v1/pedidos/mis-pedidos/**").hasAnyRole("CLIENTE", "ADMIN")
-                .requestMatchers(HttpMethod.POST, "/api/v1/pedidos").hasAnyRole("CLIENTE", "ADMIN")
+                // 2. Login y registro
+                .requestMatchers("/api/v1/auth/**").permitAll()
 
-                // 4. Órdenes / Pedidos: Vendedor y Admin pueden listar y ver detalle
-                .requestMatchers(HttpMethod.GET, "/api/v1/pedidos", "/api/v1/pedidos/{id}").hasAnyRole("VENDEDOR", "ADMIN")
+                // 3. Catálogo público
+                .requestMatchers(HttpMethod.GET,
+                    "/api/v1/libros/**",
+                    "/api/v1/categorias/**",
+                    "/api/v1/editoriales/**",
+                    "/api/v1/catalogos/**"
+                ).permitAll()
 
-                // 5. Administración total: solo ADMIN modifica catálogo, cambia estados de pedidos y gestiona usuarios
-                .requestMatchers("/api/v1/libros/**", "/api/v1/categorias/**", "/api/v1/editoriales/**").hasRole("ADMIN")
-                .requestMatchers("/api/v1/pedidos/**", "/api/v1/usuarios/**", "/api/v1/roles/**").hasRole("ADMIN")
+                // 4. Pedidos del cliente
+                .requestMatchers(HttpMethod.GET,
+                    "/api/v1/pedidos/mis-pedidos/**"
+                ).hasAnyRole("CLIENTE", "ADMIN")
 
+                .requestMatchers(HttpMethod.POST,
+                    "/api/v1/pedidos"
+                ).hasAnyRole("CLIENTE", "ADMIN")
+
+                // 5. Consulta de pedidos para vendedor y administrador
+                .requestMatchers(HttpMethod.GET,
+                    "/api/v1/pedidos",
+                    "/api/v1/pedidos/{id}"
+                ).hasAnyRole("VENDEDOR", "ADMIN")
+
+                // 6. Administración del catálogo
+                .requestMatchers(
+                    "/api/v1/libros/**",
+                    "/api/v1/categorias/**",
+                    "/api/v1/editoriales/**"
+                ).hasRole("ADMIN")
+
+                // 7. Administración de usuarios y pedidos
+                .requestMatchers(
+                    "/api/v1/pedidos/**",
+                    "/api/v1/usuarios/**",
+                    "/api/v1/roles/**"
+                ).hasRole("ADMIN")
+
+                // 8. Cualquier otra ruta requiere autenticación
                 .anyRequest().authenticated()
             )
             .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+            .addFilterBefore(
+                jwtAuthFilter,
+                UsernamePasswordAuthenticationFilter.class
+            );
 
         return http.build();
     }
